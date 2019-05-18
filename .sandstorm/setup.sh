@@ -7,6 +7,9 @@ set -euo pipefail
 
 export DEBIAN_FRONTEND=noninteractive
 
+# https
+apt-get install -y apt-transport-https
+
 # Add mysql repo
 echo -e "deb http://repo.mysql.com/apt/debian/ stretch mysql-5.7\ndeb-src http://repo.mysql.com/apt/debian/ stretch mysql-5.7" > /etc/apt/sources.list.d/mysql.list
 wget -O /tmp/RPM-GPG-KEY-mysql https://repo.mysql.com/RPM-GPG-KEY-mysql
@@ -73,3 +76,5 @@ innodb_log_file_size = 1048576
 # Set the main data file to grow by 1MB at a time, rather than 8MB at a time.
 innodb_autoextend_increment = 1
 EOF
+
+exit 0
