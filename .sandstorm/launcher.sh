@@ -19,11 +19,8 @@ mkdir -p /var/run/mysqld
 # Ensure mysql tables created
 HOME=/etc/mysql /usr/sbin/mysqld --initialize
 
-
-# Symlink /opt/app/storage to /var/storage
-
-
 # Spawn mysqld, php
+# ER: removed --skip-grant-tables, why?
 HOME=/etc/mysql /usr/sbin/mysqld --skip-grant-tables &
 /usr/sbin/php-fpm7.2 --nodaemonize --fpm-config /etc/php/7.2/fpm/php-fpm.conf &
 # Wait until mysql and php have bound their sockets, indicating readiness
@@ -36,13 +33,15 @@ while [ ! -e /var/run/php/php7.2-fpm.sock ] ; do
     sleep .2
 done
 
-
 # Ensure db exists
-#echo "CREATE DATABASE IF NOT EXISTS monica; CREATE USER IF NOT EXISTS 'homestead'@'localhost' IDENTIFIED BY 'secret'; GRANT ALL ON monica.* TO 'homestead'@'localhost'; FLUSH PRIVILEGES;" | mysql --user root --socket /var/run/mysqld/mysqld.sock
+# using root user. could not create a new user w/ `--skip-grant-tables` option
+echo "CREATE DATABASE IF NOT EXISTS monica;" | mysql --user root --socket /var/run/mysqld/mysqld.sock
+# echo "CREATE DATABASE IF NOT EXISTS monica; CREATE USER IF NOT EXISTS 'homestead'@'localhost' IDENTIFIED BY 'secret'; GRANT ALL ON monica.* TO 'homestead'@'localhost'; FLUSH PRIVILEGES;" | mysql --user root --socket /var/run/mysqld/mysqld.sock
 
 # run migrations
 php /opt/app/artisan setup:production -v
 
+echo 'alright'
 
 # Start nginx.
 /usr/sbin/nginx -c /opt/app/.sandstorm/service-config/nginx.conf -g "daemon off;"
