@@ -24,7 +24,7 @@ wget -O- https://packages.sury.org/php/apt.gpg | apt-key add -
 # sudo curl -s https://packages.sury.org/php/apt.gpg -o /etc/apt/trusted.gpg.d/php.gpg 
 # echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" | sudo tee /etc/apt/sources.list.d/php.list
 
-# install nginx(replace w/ apache?), git, mysql
+# install nginx, git, mysql
 apt update
 apt-get install -y nginx git mysql-server
 
@@ -76,5 +76,12 @@ innodb_log_file_size = 1048576
 # Set the main data file to grow by 1MB at a time, rather than 8MB at a time.
 innodb_autoextend_increment = 1
 EOF
+
+# change permissions (not possible)
+# whoami
+# chown -R vagrant:www-data /opt/app
+# cd /opt/app
+# chgrp -R www-data storage bootstrap/cache
+# chmod -R ug+rwx storage bootstrap/cache
 
 exit 0

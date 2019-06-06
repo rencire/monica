@@ -90,7 +90,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     vb.customize ["modifyvm", :id, "--nictype1", "Am79C973"]
 
     # /opt/app and /host-dot-sandstorm are used by vagrant-spk
-    override.vm.synced_folder "..", "/opt/app"
+    override.vm.synced_folder "..", "/opt/app",  :owner => 'vagrant', :group => 'www-data', :mount_options => ['dmode=775', 'fmode=775']
     override.vm.synced_folder ENV["HOME"] + "/.sandstorm", "/host-dot-sandstorm"
     # /vagrant is not used by vagrant-spk; we need this line so it gets disabled; if we removed the
     # line, vagrant would automatically insert a synced folder in /vagrant, which is not what we want.

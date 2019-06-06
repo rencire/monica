@@ -39,9 +39,9 @@ echo "CREATE DATABASE IF NOT EXISTS monica;" | mysql --user root --socket /var/r
 # echo "CREATE DATABASE IF NOT EXISTS monica; CREATE USER IF NOT EXISTS 'homestead'@'localhost' IDENTIFIED BY 'secret'; GRANT ALL ON monica.* TO 'homestead'@'localhost'; FLUSH PRIVILEGES;" | mysql --user root --socket /var/run/mysqld/mysqld.sock
 
 # run migrations
+echo 'before migrations'
 php /opt/app/artisan setup:production -v
-
-echo 'alright'
+echo 'after migrations'
 
 # Start nginx.
 /usr/sbin/nginx -c /opt/app/.sandstorm/service-config/nginx.conf -g "daemon off;"
