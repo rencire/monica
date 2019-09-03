@@ -19,5 +19,14 @@ set -euo pipefail
 
 # By default, this script does nothing.  You'll have to modify it as
 # appropriate for your application.
-cd /opt/app
+
+# Note: current user is `vagrant`
+
+
+cd /var/www/monica
+
+sudo chown -R vagrant storage/logs/ vendor/ bootstrap/cache/
+composer install --no-interaction --no-suggest --no-dev
+
 exit 0
+

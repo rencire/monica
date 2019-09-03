@@ -28,5 +28,43 @@ set -euo pipefail
 
 # By default, this script does nothing.  You'll have to modify it as
 # appropriate for your application.
-cd /opt/app
+
+cd /var/www/monica
+
+## DB
+
+# Secure db
+# https://stackoverflow.com/questions/24270733/automate-mysql-secure-installation-with-echo-command-via-a-shell-script#27759061
+mysql -u root < "mysql_secure_installation.sql"
+
+# Setup db
+mysql -u root < "setup_db.sql"
+# Setup app key
+php artisan key:generate
+
+# Run migrations, seed db, symlink folders
+php artisan setup:production -v
+
+## WebServer
+
+# Configure apache webserver
+chown -R www-data:www-data /var/www/monica
+chmod -R 775 /var/www/monica/storage
+
+# Enable apache webserver rewrite module
+a2enmod rewrite
+
+# Copy over `monica.conf` to
+cp monica.conf /etc/apache2/sites-available/monica.conf
+
+# Apply new .conf
+a2dissite 000-default.conf
+a2ensite monica.conf
+
+# Enable php7.2 fpm, and restart apache
+a2enmod proxy_fcgi setenvif
+a2enconf php7.2-fpm
+service php7.2-fpm restart
+service apache2 restart
+
 exit 0

@@ -1,0 +1,3 @@
+Seeing error message:
+
+This grain's app package is not installed, or the installed version is too old...
